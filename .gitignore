@@ -1,0 +1,53 @@
+# Python caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+# Editors/OS
+.DS_Store
+Thumbs.db
+.vscode/
+.ipynb_checkpoints/
+# Build artifacts
+build/
+dist/
+*.log
+*.aux
+*.bbl
+*.blg
+*.out
+*.toc
+*.synctex*
+*.fls
+*.fdb_latexmk
+# Heavy outputs and data
+outputs*/
+outputs_final*/
+outputs_runs*/
+outputs_layers*/
+outputs_prompt*/
+outputs_negative_subspace*/
+camera_ready*/
+*.npz
+*.npy
+*.pt
+*.pth
+*.h5
+*.zip
+*.gz
+*.xz
+*.7z
+*.tar
+*.tar.gz
+*.zst
+# Large tabulars by default
+*.csv
+*.tsv
+# Keep paper assets and figs
+!paper/
+!paper/figs/
+!paper/**/*.tex
+!paper/**/*.png
+!paper/**/*.jpg
+!paper/**/*.pdf
