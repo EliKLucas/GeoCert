@@ -4,14 +4,13 @@ This repository contains the LaTeX source, figures, data, and code to reproduce 
 
 ## Reproducibility Statement
 
-All artifacts (CSV/PNGs) are produced by a single command:
-```bash
-python scripts/bundle_camera_ready.py
-```
+This repository contains the complete paper source and all data needed to reproduce the GeoCert paper results.
 
-We release the code and the prompt set, with seeds {0,1,2}. Environment: Python 3.11, PyTorch 2.1, transformers 4.35.
+**Core Method**: GeoCert tests geometric consistency of LLM representations using EDM (Euclidean Distance Matrix) theory, distinguishing convex blends vs edge-mixes, and explaining failures via K=2 disentangling.
 
-We record the Git commit hash, HF model revisions, and SHA256 of prompt files in the bundle metadata.
+**Data**: Seeds {0,1,2}, 256 prompts, 21 ρ-steps, bootstrap CIs. Environment: Python 3.11, PyTorch 2.1, transformers 4.35.
+
+**Traceability**: Git commit hash, HF model revisions, and SHA256 of prompt files recorded in artifacts.json.
 
 ## Quick Start
 
@@ -29,10 +28,8 @@ latexmk -pdf -halt-on-error -interaction=nonstopmode .\paper\geocert_paper.tex
 latexmk -pdf -halt-on-error -interaction=nonstopmode paper/geocert_paper.tex
 ```
 
-### 3. Reproduce All Artifacts
-```bash
-python scripts/bundle_camera_ready.py
-```
+### 3. Data and Results
+All figures and tables are pre-computed and included in the `paper/` directory. The paper presents results from the GeoCert method applied to OPT-125M, GPT-Neo-125M, and DistilGPT2 models.
 
 ## Repository Structure
 
@@ -49,10 +46,8 @@ paper/
 ├── T3_triangle_isometry.csv   # Table 3 data
 └── T7_prompt_robustness.csv   # Table 7 data
 
-scripts/
-├── bundle_camera_ready.py     # Main reproducibility script
-└── ...                        # Other analysis scripts
-
+geocert/                       # Core GeoCert implementation
+scripts/                       # Analysis scripts (for reference)
 requirements.txt               # Python dependencies
 ```
 
