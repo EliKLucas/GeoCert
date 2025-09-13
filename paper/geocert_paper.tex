@@ -48,8 +48,8 @@
 \title{GeoCert: Coordinate-Free Geometric Consistency Tests\\
 for LLM Representations}
 
-\author{Anonymous Authors\\
-\small Affiliation removed for double-blind review}
+\author{Elijah Lucas\\
+\tiny contact: elijah.lucas.research@gmail.com}
 
 \date{}
 
@@ -138,7 +138,7 @@ A single Euclidean chart is the quiet assumption behind nearest-neighbor retriev
 \textbf{5. Fix.} A minimal $K{=}2$ split removes $\sim$95--97\% of negative mass on residuals; heads project to exact PSD per layer.
 \end{tcolorbox}
 
-\noindent\textbf{GeoCert}, a coordinate-free pipeline that maps similarities $C$ to Euclidean distances $D$, forms the EDM Gram $B=-\tfrac12\,J D^{\circ2} J$, and uses the bottom spectrum (e.g., $\lambda_{\min}(B)$ and negative-PSD mass) as \emph{global witnesses} of embeddability. We formally distinguish \emph{convex blends} of contexts (PSD-preserving; pass) from \emph{edge-mixes} (per-edge selection; break PSD; fail), explaining the characteristic U-curves we observe under edge-mix. We add local triangle scans, edge tension, node negative-load, and a greedy $K{=}2$ edge-level disentangling that explains failures by partitioning edges into two EDM-compatible layers.
+\noindent\textbf{GeoCert}, a coordinate-free pipeline that maps similarities $C$ to Euclidean distances $D$, forms the EDM Gram $B=-\tfrac12\,J D^{\circ2} J$, and uses the bottom spectrum (e.g., $\lambda_{\min}(B)$ and negative-PSD mass) as \emph{global witnesses} of embeddability. We formally distinguish \emph{convex blends} of contexts (PSD-preserving; pass) from \emph{edge-mixes} (per-edge selection; break PSD; fail), explaining the characteristic U-curves we observe under edge-mix. We add local triangle scans, edge tension, node negative-load, and a greedy $K{=}2$ edge-level disentangling that explains failures by partitioning edges into two EDM-compatible layers (cf. \citep{schoenberg1938,gower1985,LibertiLavor2017,Dokmanic2015}).
 
 \paragraph{Contributions.}
 \begin{itemize}[leftmargin=1.5em]
@@ -149,9 +149,9 @@ A single Euclidean chart is the quiet assumption behind nearest-neighbor retriev
 \end{itemize}
 
 \section{Related Work}
-\textbf{Metric/manifold learning.} Classical MDS assumes a single geometry; we \emph{test} this assumption with convex certificates.\\
+\textbf{Metric/manifold learning.} Classical MDS assumes a single geometry; we \emph{test} this assumption with convex certificates \citep{torgerson1952,borg2005}.\\
 \textbf{Inequality-based checks.} Local algebraic inequalities (triangle, hypermetric) are fragile under noise; GeoCert’s PSD tests are global.\\
-\textbf{LLM interpretability.} Circuit/head analyses localize behaviors; we add a \emph{global compatibility} lens and a principled way to \emph{separate contextual layers}.
+\textbf{LLM interpretability.} Circuit/head analyses localize behaviors; we add a \emph{global compatibility} lens and a principled way to \emph{separate contextual layers} \citep{Vig2020CausalMediation,Elazar2021Amnesic,Meng2022ROME}.
 
 \section{Methods}
 \subsection{From similarities to EDMs}\label{sec:fromCtoB}
@@ -231,15 +231,15 @@ We rank top-$K$ edges by $\tau$ and alternatingly assign to two layers to \emph{
 
 \subsection{Computational complexity \& scalability}
 \textbf{Building $C$:} $O(n^2d)$; \textbf{forming $B$:} $O(n^2)$ time/memory; \textbf{eigen-witness:} bottom spectrum via Lanczos/power in $O(mn^2)$ ($m\!\ll\!n$). Triangles: $O(S)$ for $S$ samples. Disentangling: compute $\tau$ in $O(n^2)$ and alternate in $O(K)$ per iteration (5--7 iters).\\
-\textbf{Scaling:} Nyström on $C$ (landmarks $p\!\ll\!n$), sparsified kNN subgraphs, randomized SVD/Lanczos, and streaming rank-one updates with a few power iterations.
+\textbf{Scaling:} Nyström on $C$ (landmarks $p\!\ll\!n$), sparsified kNN subgraphs, randomized SVD/Lanczos \citep{halko2011}, and streaming rank-one updates with a few power iterations.
 
 \subsection{Practical scaling via Nyström}\label{sec:nystrom}
-For large $n$ we Nyström-approximate $C\approx W W^\top$ with $p\ll n$ landmarks, yielding $B\approx J W W^\top J$ and using Lanczos for bottom eigenpairs. This reduces memory to $O(np)$.
+For large $n$ we Nyström-approximate $C\approx W W^\top$ with $p\ll n$ landmarks \citep{williams2001nystrom,Fowlkes2004}, yielding $B\approx J W W^\top J$ and using Lanczos for bottom eigenpairs. This reduces memory to $O(np)$.
 
 \section{Experimental Setup}
-\textbf{Models:} \texttt{facebook/opt-125m}, \texttt{EleutherAI/gpt-neo-125M}, \texttt{distilgpt2}; scaling validation on \texttt{facebook/opt-350m} and \texttt{EleutherAI/pythia-1b}.\\
+\textbf{Models:} \texttt{facebook/opt-125m}, \texttt{EleutherAI/gpt-neo-125M}, \texttt{distilgpt2}; scaling validation on \texttt{facebook/opt-350m} and \texttt{EleutherAI/pythia-1b} \citep{Zhang2022OPT,Biderman2023Pythia,Radford2019GPT2,Vaswani2017}.\\
 \textbf{Features:} (i) \textbf{Residual} graphs at a mid layer; (ii) \textbf{Heads} graphs (66 edges) at a chosen layer.\\
-\textbf{Sampling:} 3 seeds, 256 prompts, 21 $\rho$-steps; bootstrap CIs over seeds.\\
+\textbf{Sampling:} 3 seeds, 256 prompts, 21 $\rho$-steps; bootstrap CIs over seeds \citep{Efron1979}.\\
 \textbf{Artifacts:} All figures under \texttt{figs/} and tables under \texttt{tables/}.\\[0.25em]
 \textit{Layer choice.} We target a mid transformer block (L=8 for 125M/350M; L=5 for Distil) to avoid shallow features while capturing mixed computations in deeper layers. Results are qualitatively similar in adjacent layers.
 
@@ -322,7 +322,7 @@ For large $n$ we Nyström-approximate $C\approx W W^\top$ with $p\ll n$ landmark
 \includegraphics[width=\linewidth]{figs/rfc_alignment_EleutherAI_pythia-1b_residual_L8.png}
 \caption{Pythia-1B (L=8)}
 \end{subfigure}
-\caption{RFC alignment for larger models. \textbf{What to notice:} at 350M/1B, precision@K approaches strong degree-matched baselines due to heavy degree skew and small $n$; Kendall's $\tau_b$ tracks Pearson when Spearman is tie-unstable.}
+\caption{RFC alignment for larger models. \textbf{What to notice:} at 350M/1B, precision@K approaches strong degree-matched baselines due to heavy degree skew and small $n$; Kendall's $\tau_b$ tracks Pearson when Spearman is tie-unstable \citep{Kendall1938,Spearman1904}.}
 \label{fig:rfc_alignment_panel_big}
 \end{figure}
 
@@ -350,7 +350,7 @@ For large $n$ we Nyström-approximate $C\approx W W^\top$ with $p\ll n$ landmark
 \item DistilGPT2: worst-mix $\lambda_{\min}$ \textbf{\negnum{17.33}} [\negnum{17.40}, \negnum{17.24}]; mass \textbf{2124.93}. See Fig.~\ref{fig:curves}.
 \end{itemize}
 
-\paragraph{Effect sizes.} Edge-mix vs convex-blend differences are large: $\Delta\lambda_{\min}$ ranges from $-19.5$ to $-0.02$ with area-under-negativity differences of $0.3$ to $302$. Significance via a two-sided, within-seed permutation test (10{,}000 shuffles) yields $p<10^{-3}$ after Holm--Bonferroni correction.
+\paragraph{Effect sizes.} Edge-mix vs convex-blend differences are large: $\Delta\lambda_{\min}$ ranges from $-19.5$ to $-0.02$ with area-under-negativity differences of $0.3$ to $302$. Significance via a two-sided, within-seed permutation test (10{,}000 shuffles) yields $p<10^{-3}$ after Holm--Bonferroni correction \citep{Holm1979}.
 
 \textbf{Heads (edge-mix):}
 \begin{itemize}[leftmargin=1.5em]
@@ -792,7 +792,7 @@ DistilGPT2 & \negnum{0.02252} [\negnum{0.02571}, \negnum{0.02012}] & 0.03063 & 5
 $\tau_{ij}=(\hat u_i-\hat u_j)^2$, with $\hat u=Ju$. Negative-load $L_i=(B_-)_{ii}$.
 
 \subsection*{RFC protocol (corrupt/rescue)}\label{app:rfc-protocol}
-We follow a standard corrupt/rescue protocol. For a layer $\ell$ with node activations $h^{(\ell)}$, \emph{corrupt-all} replaces $h^{(\ell)}$ with a mismatched batch (or adds calibrated Gaussian noise) with strength $\alpha$; \emph{rescue-$i$} repeats corrupt-all but restores node $i$. Impact is $\Delta\mathcal{L}_i=\mathcal{L}(\text{corrupt-all})-\mathcal{L}(\text{rescue-}i)$. We calibrate $\alpha$ for a $\sim$10--30\% loss increase to avoid saturation. We report Pearson/Spearman and precision@K vs random and degree-matched baselines; we also compute Kendall's $\tau_b$ when ties make Spearman unstable.
+We follow a standard corrupt/rescue protocol. For a layer $\ell$ with node activations $h^{(\ell)}$, \emph{corrupt-all} replaces $h^{(\ell)}$ with a mismatched batch (or adds calibrated Gaussian noise) with strength $\alpha$; \emph{rescue-$i$} repeats corrupt-all but restores node $i$. Impact is $\Delta\mathcal{L}_i=\mathcal{L}(\text{corrupt-all})-\mathcal{L}(\text{rescue-}i)$. We calibrate $\alpha$ for a $\sim$10--30\% loss increase to avoid saturation. We report Pearson/Spearman and precision@K vs random and degree-matched baselines; we also compute Kendall's $\tau_b$ when ties make Spearman unstable \citep{Kendall1938,Spearman1904}.
 
 \section{Figure anchors}\label{app:figs}
 \textbf{Curves:} \texttt{figs/curve\_facebook\_opt-125m\_residual.png}, \texttt{figs/curve\_facebook\_opt-125m\_heads.png};\\
@@ -874,6 +874,76 @@ Williams, Christopher K. I. and Seeger, Matthias.
 \newblock Using the Nystr\"om method to speed up kernel machines.
 \newblock In {\em Advances in Neural Information Processing Systems 13}, pages 682--688, 2001.
 
+\bibitem{Fowlkes2004}
+Fowlkes, Charless and Belongie, Serge and Chung, Fan and Malik, Jitendra.
+\newblock Spectral grouping using the Nystr\"om method.
+\newblock {\em IEEE Transactions on Pattern Analysis and Machine Intelligence}, 26(2):214--225, 2004.
+
+\bibitem{Efron1979}
+Efron, Bradley.
+\newblock Bootstrap methods: Another look at the jackknife.
+\newblock {\em The Annals of Statistics}, 7(1):1--26, 1979.
+
+\bibitem{Holm1979}
+Holm, Sture.
+\newblock A simple sequentially rejective multiple test procedure.
+\newblock {\em Scandinavian Journal of Statistics}, 6:65--70, 1979.
+
+\bibitem{Spearman1904}
+Spearman, Charles.
+\newblock The proof and measurement of association between two things.
+\newblock {\em The American Journal of Psychology}, 15(1):72--101, 1904.
+
+\bibitem{Kendall1938}
+Kendall, Maurice G.
+\newblock A new measure of rank correlation.
+\newblock {\em Biometrika}, 30(1/2):81--93, 1938.
+
+\bibitem{Paszke2019}
+Paszke, Adam and Gross, Sam and Massa, Francisco and Lerer, Adam and Bradbury, James and others.
+\newblock PyTorch: An imperative style, high-performance deep learning library.
+\newblock In {\em Advances in Neural Information Processing Systems 32}, 2019.
+
+\bibitem{Wolf2020}
+Wolf, Thomas and Debut, Lysandre and Sanh, Victor and Chaumond, Julien and Delangue, Clement and others.
+\newblock Transformers: State-of-the-art natural language processing.
+\newblock In {\em Proceedings of EMNLP 2020: System Demonstrations}, pages 38--45, 2020.
+
+\bibitem{Zhang2022OPT}
+Zhang, Susan and Roller, Stephen and Goyal, Naman and Artetxe, Mikel and Zettlemoyer, Luke and others.
+\newblock OPT: Open pre-trained transformer language models.
+\newblock {\em arXiv preprint arXiv:2205.01068}, 2022.
+
+\bibitem{Biderman2023Pythia}
+Biderman, Stella and Anthony, Quentin and Chiang, H. Leo and Prashanth, Usvsn Sai and others.
+\newblock Pythia: A suite for analyzing large language models.
+\newblock {\em arXiv preprint arXiv:2304.01373}, 2023.
+
+\bibitem{Radford2019GPT2}
+Radford, Alec and Wu, Jeffrey and Child, Rewon and Luan, David and Amodei, Dario and Sutskever, Ilya.
+\newblock Language models are unsupervised multitask learners.
+\newblock {\em OpenAI Technical Report}, 2019.
+
+\bibitem{Vaswani2017}
+Vaswani, Ashish and Shazeer, Noam and Parmar, Niki and Uszkoreit, Jakob and Jones, Llion and Gomez, Aidan N. and Kaiser, \L{}ukasz and Polosukhin, Illia.
+\newblock Attention is all you need.
+\newblock In {\em Advances in Neural Information Processing Systems 30}, 2017.
+
+\bibitem{Vig2020CausalMediation}
+Vig, Jesse and Gehrmann, Sebastian and Belinkov, Yonatan and Qian, Sharon and Nevo, Daniel and others.
+\newblock Causal mediation analysis for interpreting neural NLP: The case of gender bias.
+\newblock In {\em Advances in Neural Information Processing Systems 33}, 2020.
+
+\bibitem{Elazar2021Amnesic}
+Elazar, Yanai and Ravfogel, Shauli and Jacovi, Alon and Goldberg, Yoav.
+\newblock Amnesic probing: Behavioral explanation with amnesic counterfactuals.
+\newblock {\em Transactions of the Association for Computational Linguistics}, 9:160--175, 2021.
+
+\bibitem{Meng2022ROME}
+Meng, Kevin and Bau, David and Andonian, Alex and Belinkov, Yonatan.
+\newblock Locating and editing factual associations in GPT.
+\newblock In {\em Advances in Neural Information Processing Systems 35}, 2022.
+
 \bibitem{young1938}
 Young, G. T. and Householder, A. S.
 \newblock Discussion of a set of points in terms of their mutual distances.
@@ -883,6 +953,16 @@ Young, G. T. and Householder, A. S.
 Young, G. and Householder, A. S.
 \newblock Discussion of a set of points in terms of their mutual distances.
 \newblock {\em Psychometrika}, 1938.
+
+\bibitem{Dokmanic2015}
+Dokmani\'c, Ivan and Parhizkar, Reza and Ranieri, Juliette and Vetterli, Martin.
+\newblock Euclidean distance matrices: Essential theory, algorithms, and applications.
+\newblock {\em IEEE Signal Processing Magazine}, 32(6):12--30, 2015.
+
+\bibitem{LibertiLavor2017}
+Liberti, Leo and Lavor, Carlile.
+\newblock {\em Euclidean Distance Geometry: An Introduction}.
+\newblock Springer, 2017.
 
 \end{thebibliography}
 
