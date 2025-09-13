@@ -17,6 +17,7 @@
 \usepackage{enumitem}
 \usepackage{caption}
 \usepackage{subcaption}
+\usepackage[section]{placeins} % keep floats within their sections
 \usepackage{xcolor}
 \usepackage{hyperref}
 \usepackage[skins,most]{tcolorbox}
@@ -53,7 +54,7 @@
 for LLM Representations}
 
 \author{Elijah Lucas\\
-\tiny contact: elijah.lucas.research@gmail.com}
+\small contact: elijah.lucas.research@gmail.com}
 
 \date{}
 
@@ -77,56 +78,56 @@ A single Euclidean chart is the quiet assumption behind nearest-neighbor retriev
 \centering
 \begin{subfigure}[t]{0.32\textwidth}
 \centering
-\begin{tikzpicture}[>=Latex, node distance=1.6cm]
-\node[draw,rounded corners,minimum width=1.9cm,minimum height=1.2cm,fill=blue!6] (C)
+\begin{tikzpicture}[>=Latex, node distance=1.6cm, scale=0.85, transform shape]
+\node[draw,rounded corners,minimum width=1.6cm,minimum height=1.0cm,fill=blue!6] (C)
   {\shortstack{$C$\\\footnotesize (similarity)}};
-\node[draw,rounded corners,minimum width=1.9cm,minimum height=1.2cm,fill=green!6,right=of C] (D)
+\node[draw,rounded corners,minimum width=1.6cm,minimum height=1.0cm,fill=green!6,right=of C] (D)
   {\shortstack{$D$\\\footnotesize (distances)}};
-\node[draw,rounded corners,minimum width=2.2cm,minimum height=1.2cm,fill=orange!6,right=of D] (B)
+\node[draw,rounded corners,minimum width=1.8cm,minimum height=1.0cm,fill=orange!6,right=of D] (B)
   {\shortstack{$B=-\tfrac12\,J D^{\circ2} J$\\\footnotesize (EDM Gram)}};
-\draw[->,thick] (C) -- node[above]{chordal map} (D);
-\draw[->,thick] (D) -- node[above]{double-center} (B);
-\node[below=0.9cm of D,align=center] {\textbf{A. Pipeline:} $C \to D \to B$};
+\draw[->,thick] (C) -- node[above,font=\tiny]{chordal map} (D);
+\draw[->,thick] (D) -- node[above,font=\tiny]{double-center} (B);
+\node[below=0.7cm of D,align=center,font=\small] {\textbf{A. Pipeline:} $C \to D \to B$};
 \end{tikzpicture}
 \end{subfigure}\hfill
 \begin{subfigure}[t]{0.32\textwidth}
 \centering
-\begin{tikzpicture}[>=Latex]
+\begin{tikzpicture}[>=Latex, scale=0.85, transform shape]
 % Convex blend
-\node[draw,rounded corners,fill=blue!6,minimum width=1.6cm,minimum height=0.8cm] (c1) {};
-\node[draw,rounded corners,fill=green!6,minimum width=1.6cm,minimum height=0.8cm,below=0.15cm of c1] (c2) {};
-\node[right=0.3cm of c1,align=left,font=\footnotesize] {Convex blend\\(smooth mix; PSD-preserving)};
-\draw[->] ([xshift=0.8cm]c2.south) -- ++(0,-0.5cm);
-\node[draw,rounded corners,fill=blue!10!green!20,minimum width=1.6cm,minimum height=0.8cm,below=1.0cm of c2] (cb) {};
+\node[draw,rounded corners,fill=blue!6,minimum width=1.4cm,minimum height=0.6cm] (c1) {};
+\node[draw,rounded corners,fill=green!6,minimum width=1.4cm,minimum height=0.6cm,below=0.1cm of c1] (c2) {};
+\node[right=0.2cm of c1,align=left,font=\tiny] {Convex blend\\(smooth mix; PSD-preserving)};
+\draw[->] ([xshift=0.7cm]c2.south) -- ++(0,-0.4cm);
+\node[draw,rounded corners,fill=blue!10!green!20,minimum width=1.4cm,minimum height=0.6cm,below=0.8cm of c2] (cb) {};
 % Edge mix
-\node[draw,rounded corners,fill=blue!6,minimum width=1.6cm,minimum height=0.8cm,right=2.2cm of c1] (e1) {};
-\node[draw,rounded corners,fill=green!6,minimum width=1.6cm,minimum height=0.8cm,below=0.15cm of e1] (e2) {};
-\node[right=0.3cm of e1,align=left,font=\footnotesize] {Edge-mix\\(per-edge stitching; breaks PSD)};
-\draw[->] ([xshift=0.8cm]e2.south) -- ++(0,-0.5cm);
-\begin{scope}[shift={(3.2cm,-1.65cm)}]
-  \draw[rounded corners,fill=blue!10!green!20] (0,0) rectangle (1.6,0.8);
-  \draw[very thick,white] (0.0,0.4) -- (1.6,0.4);
-  \draw[very thick,white] (0.8,0.0) -- (0.8,0.8);
+\node[draw,rounded corners,fill=blue!6,minimum width=1.4cm,minimum height=0.6cm,right=1.8cm of c1] (e1) {};
+\node[draw,rounded corners,fill=green!6,minimum width=1.4cm,minimum height=0.6cm,below=0.1cm of e1] (e2) {};
+\node[right=0.2cm of e1,align=left,font=\tiny] {Edge-mix\\(per-edge stitching; breaks PSD)};
+\draw[->] ([xshift=0.7cm]e2.south) -- ++(0,-0.4cm);
+\begin{scope}[shift={(2.8cm,-1.3cm)}]
+  \draw[rounded corners,fill=blue!10!green!20] (0,0) rectangle (1.4,0.6);
+  \draw[very thick,white] (0.0,0.3) -- (1.4,0.3);
+  \draw[very thick,white] (0.7,0.0) -- (0.7,0.6);
 \end{scope}
-\node[below=1.1cm of cb,align=center] {\textbf{B. Mix types:} convex blend vs.\ edge-mix};
+\node[below=0.9cm of cb,align=center,font=\small] {\textbf{B. Mix types:} convex blend vs.\ edge-mix};
 \end{tikzpicture}
 \end{subfigure}\hfill
 \begin{subfigure}[t]{0.32\textwidth}
 \centering
-\begin{tikzpicture}[>=Latex]
+\begin{tikzpicture}[>=Latex, scale=0.85, transform shape]
 % Gauge
-\draw[very thick] (0,0) arc[start angle=180,end angle=360,radius=1.4];
+\draw[very thick] (0,0) arc[start angle=180,end angle=360,radius=1.2];
 \foreach \a in {180,225,270,315,360}{
-  \draw[thin] ({1.4*cos(\a)},{1.4*sin(\a)}) -- ({1.55*cos(\a)},{1.55*sin(\a)});
+  \draw[thin] ({1.2*cos(\a)},{1.2*sin(\a)}) -- ({1.35*cos(\a)},{1.35*sin(\a)});
 }
 % colored ticks (conceptual)
-\draw[line width=4pt,green!60] (180:1.2) arc (180:230:1.2);
-\draw[line width=4pt,orange!70] (230:1.2) arc (230:300:1.2);
-\draw[line width=4pt,red!70] (300:1.2) arc (300:360:1.2);
+\draw[line width=3pt,green!60] (180:1.0) arc (180:230:1.0);
+\draw[line width=3pt,orange!70] (230:1.0) arc (230:300:1.0);
+\draw[line width=3pt,red!70] (300:1.0) arc (300:360:1.0);
 % needle
-\draw[very thick,->] (0,0) -- ({1.1*cos(310)},{1.1*sin(310)});
-\node[below=2ex] at (0,0) {$\lambda_{\min}(B)$};
-\node at (0,-1.9) {\textbf{C. Consistency meter:} more negative $\Rightarrow$ less consistent};
+\draw[very thick,->] (0,0) -- ({0.9*cos(310)},{0.9*sin(310)});
+\node[below=1ex,font=\footnotesize] at (0,0) {$\lambda_{\min}(B)$};
+\node[font=\small] at (0,-1.6) {\textbf{C. Consistency meter:} more negative $\Rightarrow$ less consistent};
 \end{tikzpicture}
 \end{subfigure}
 \caption{\textbf{Conceptual schematic.} \textbf{A:} GeoCert pipeline from similarities $C$ to distances $D$ to the EDM Gram $B$. \textbf{B:} \emph{Convex blends} preserve PSD (smooth mix), whereas \emph{edge-mixes} stitch per-edge constraints and can break PSD. \textbf{C:} The bottom eigenvalue $\lambda_{\min}(B)$ serves as a global ``consistency meter.'' \textbf{What to notice:} GeoCert is coordinate-free, distinguishes safe blends from unsafe mixing, and quantifies global inconsistency with a single spectrum witness.}
@@ -346,6 +347,7 @@ For large $n$ we Nyström-approximate $C\approx W W^\top$ with $p\ll n$ landmark
 \end{figure}
 
 \section{Results}
+\FloatBarrier
 \subsection{Edge-mix curves fail globally while convex blends pass}
 \textbf{Residual (edge-mix):}
 \begin{itemize}[leftmargin=1.5em]
@@ -541,6 +543,7 @@ Pythia-1B & 8 & 256 & -- & -- \\
 \end{figure}
 
 \section{Comparators \& Sensitivity}
+\FloatBarrier
 \subsection{Convex-blend control}
 Across all models/features/seeds, convex-blend $\lambda_{\min}\!\approx\!0$. Overlays listed in \S5.1 and Appendix.
 
@@ -704,9 +707,11 @@ Pythia-1B & 8 & 0.01 & $-0.03$ & 0.10 & 0.90 & 256 \\
 \end{table}
 
 \section{Limitations}
+\FloatBarrier
 Greedy $K{=}2$ is monotone but locally optimal. Prompt diversity is limited (256 prompts/seed); a secondary 256-prompt set from different domains produced U-curves and $K{=}2$ removals within 5\% absolute of main results. $\delta$ is scale-sensitive; we use it as a \emph{relative} baseline. \textbf{Threats to validity:} broader domains and multilingual settings remain to be evaluated.
 
 \section{Reproducibility}
+\FloatBarrier
 All artifacts (CSV/PNGs) are produced by a single command:
 \texttt{python scripts/bundle\_camera\_ready.py}.\\
 We release the code and the prompt set, with seeds \{0,1,2\}. Environment: Python 3.11, PyTorch 2.1, transformers 4.35.\\
@@ -714,6 +719,7 @@ We release the code and the prompt set, with seeds \{0,1,2\}. Environment: Pytho
 Seeds 0,1,2; 256 prompts; 21 $\rho$-steps; bootstrap CIs across seeds. Artifacts: \texttt{paper\_aggregate.csv}, \texttt{tables/T1\_main\_metrics.csv}, \texttt{tables/T2\_edge\_attribution.csv}, \texttt{tables/T3\_triangle\_isometry.csv}, prompt-robustness table \texttt{T7\_prompt\_robustness.csv}, and all figures under \texttt{figs/}.
 
 \section{Conclusion}
+\FloatBarrier
 \textbf{Simple question, clear answer.} Do all the pairwise relationships fit one ordinary geometry? With GeoCert, we map $C\!\to\!D\!\to\!B$ and read a single, global meter: $\lambda_{\min}(B)$. \textbf{What we find:} convex blends are safe; edge-mixes tear the map (U-dips). A minimal $K{=}2$ split resolves almost all tension in residual graphs, while head graphs project to exact PSD per layer. \textbf{Why it matters:} this global, coordinate-free diagnostic complements circuit-style analyses, highlights brittle cross-context bridges, and offers a compact operational fingerprint of representational structure.
 
 \section*{Acknowledgments}
@@ -770,6 +776,8 @@ DistilGPT2 & \negnum{0.02252} [\negnum{0.02571}, \negnum{0.02012}] & 0.03063 & 5
 
 % ----- Appendix -----
 \appendix
+\FloatBarrier
+\clearpage
 \section{Additional RFC figures}
 \label{app:rfc-big}
 \begin{figure}[t]
@@ -786,6 +794,7 @@ DistilGPT2 & \negnum{0.02252} [\negnum{0.02571}, \negnum{0.02012}] & 0.03063 & 5
 \label{fig:rfc_alignment_panel_big}
 \end{figure}
 
+\FloatBarrier
 \section{Algorithms (brief)}
 \paragraph{EDM witness from similarities.}
 \begin{align*}
@@ -812,6 +821,8 @@ We follow a standard corrupt/rescue protocol. For a layer $\ell$ with node activ
 \end{itemize}
 \fi
 
+\FloatBarrier
+\clearpage
 \section{References}
 \vspace{-0.25em}
 
