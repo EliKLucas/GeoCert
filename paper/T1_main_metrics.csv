@@ -1,0 +1,11 @@
+model,feature,min_lambda_min,worst_neg_mass_mean,K2_total_neg_mass_mean,EDM_projected_total_neg_mass_mean,pct_mass_removed
+distilgpt2,heads,-0.0205005,0.0306273,5.70661,,
+distilgpt2,residual,-17.2136,2124.93,66.06,,96.89
+EleutherAI/gpt-neo-125M,heads,-0.0809448,0.139032,5.26832,,
+EleutherAI/gpt-neo-125M,residual,-19.4637,1136.37,57.405,,94.95
+EleutherAI/pythia-1b,heads,-0.0192009,0.0192009,3.90157,,
+EleutherAI/pythia-1b,residual,-27.8257,8635.69,76.0213,,99.12
+facebook/opt-125m,heads,-0.0477827,0.0736798,7.78143,,
+facebook/opt-125m,residual,-16.967,2117.5,66.6313,,96.85
+facebook/opt-350m,heads,-0.0848279,0.244272,10.4175,,
+facebook/opt-350m,residual,-20.4244,2699.29,65.0931,,97.59

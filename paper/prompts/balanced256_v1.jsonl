@@ -1,0 +1,30 @@
+{"prompt": "Write a short definition of gravity."}
+{"prompt": "Translate to French: The cat sits on the mat."}
+{"prompt": "Explain what a compiler does."}
+{"prompt": "Summarize the plot of a classic novel in two sentences."}
+{"prompt": "List three applications of linear algebra in machine learning."}
+{"prompt": "Provide a Python function to compute the Fibonacci sequence."}
+{"prompt": "Describe the process of photosynthesis in simple terms."}
+{"prompt": "What are the main differences between RAM and ROM?"}
+{"prompt": "Outline the steps to solve a quadratic equation."}
+{"prompt": "Give a brief explanation of Bayes' theorem."}
+{"prompt": "Write a descriptive paragraph about a storm over the sea."}
+{"prompt": "Compose a short story about a lost key found years later."}
+{"prompt": "Explain the theme of memory in a literary work of your choice."}
+{"prompt": "Draft a formal email requesting a meeting about project timelines."}
+{"prompt": "Write a news-style summary of a scientific discovery."}
+{"prompt": "Describe a city market using sensory details."}
+{"prompt": "Summarize an opinion essay arguing for public transit investment."}
+{"prompt": "Write an abstract for a paper on neural representation geometry."}
+{"prompt": "Provide a biography paragraph about Ada Lovelace."}
+{"prompt": "Explain how metaphors structure human thought."}
+{"prompt": "Write a Python function to merge two sorted lists in O(n)."}
+{"prompt": "Implement quicksort in Python and analyze its complexity."}
+{"prompt": "Given a directed graph, write code to detect cycles (DFS)."}
+{"prompt": "Write a SQL query to find the top 5 customers by revenue per month."}
+{"prompt": "Implement a PyTorch MLP with ReLU and train on random data."}
+{"prompt": "Write unit tests for a function that parses ISO timestamps."}
+{"prompt": "Use NumPy to compute SVD of a random matrix and reconstruct it."}
+{"prompt": "Implement a Trie data structure with insert and search."}
+{"prompt": "Write JavaScript code to debounce a function call."}
+{"prompt": "Use pandas to group by category and compute mean and std."}

@@ -51,3 +51,12 @@ camera_ready*/
 !paper/**/*.png
 !paper/**/*.jpg
 !paper/**/*.pdf
+!paper/**/*.csv
+!paper/**/*.jsonl
+!paper/**/*.json
+# Virtual environments
+.venv/
+venv/
+env/
+# Allow specific reproducibility files
+!requirements.txt

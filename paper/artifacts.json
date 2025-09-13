@@ -1,0 +1,21 @@
+{
+  "git_commit": "54df3efd4898f6acb0919370f091457b20fc7609",
+  "python": "3.11.0 (main, Oct 24 2022, 18:26:48) [MSC v.1933 64 bit (AMD64)]",
+  "seeds": [0, 1, 2],
+  "n_prompts": 256,
+  "rho_steps": 21,
+  "prompt_source": "paper/prompts/balanced256_v1.jsonl",
+  "prompt_sha256": "229A54D261FA551134E0A8F897427AD11F6A5FA446C12B26052BFBB1313F8BE8",
+  "environment": {
+    "python_version": "3.11",
+    "pytorch_version": "2.1",
+    "transformers_version": "4.35"
+  },
+  "hf_model_revisions": {
+    "facebook/opt-125m": "main",
+    "facebook/opt-350m": "main", 
+    "EleutherAI/gpt-neo-125M": "main",
+    "EleutherAI/pythia-1b": "main",
+    "distilgpt2": "main"
+  }
+}

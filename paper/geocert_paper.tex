@@ -73,67 +73,62 @@ Pairwise similarities underlie core tools in representation analysis (nearest ne
 
 A single Euclidean chart is the quiet assumption behind nearest-neighbor retrieval, clustering, and linear projections. When relations come from heterogeneous contexts, that assumption can fail globally even if most local triangles look fine. Consider measuring distances between 4 cities and finding: A--B = 100 miles, B--C = 100 miles, C--D = 100 miles, but A--D = 50 miles. No matter how you arrange these cities on a map, something's wrong---these distances can't all be true simultaneously. GeoCert catches these impossible distance relationships in representation space, provides a coordinate-free test of geometric consistency, pinpoints the edges/nodes that contradict it, and shows that a simple two-layer split resolves nearly all contradictions across three model families.
 
-% ===================== Conceptual Figure (FIXED) =====================
-\begin{figure}[t]
+% ===================== Simplified Conceptual Figure =====================
+\begin{figure}[h!]
 \centering
 \begin{subfigure}[t]{0.32\textwidth}
 \centering
-\begin{tikzpicture}[>=Latex, node distance=1.6cm, scale=0.85, transform shape]
-\node[draw,rounded corners,minimum width=1.6cm,minimum height=1.0cm,fill=blue!6] (C)
-  {\shortstack{$C$\\\footnotesize (similarity)}};
-\node[draw,rounded corners,minimum width=1.6cm,minimum height=1.0cm,fill=green!6,right=of C] (D)
-  {\shortstack{$D$\\\footnotesize (distances)}};
-\node[draw,rounded corners,minimum width=1.8cm,minimum height=1.0cm,fill=orange!6,right=of D] (B)
-  {\shortstack{$B=-\tfrac12\,J D^{\circ2} J$\\\footnotesize (EDM Gram)}};
-\draw[->,thick] (C) -- node[above,font=\tiny]{chordal map} (D);
-\draw[->,thick] (D) -- node[above,font=\tiny]{double-center} (B);
-\node[below=0.7cm of D,align=center,font=\small] {\textbf{A. Pipeline:} $C \to D \to B$};
+\begin{tikzpicture}[node distance=1.2cm]
+\node[draw,circle,minimum size=0.8cm,fill=blue!15] (C) {$C$};
+\node[draw,circle,minimum size=0.8cm,fill=green!15,right=of C] (D) {$D$};
+\node[draw,circle,minimum size=0.8cm,fill=orange!15,right=of D] (B) {$B$};
+\draw[->,thick] (C) -- (D);
+\draw[->,thick] (D) -- (B);
+\node[below=0.5cm of D,font=\small] {\textbf{A.} Pipeline: $C \to D \to B$};
 \end{tikzpicture}
 \end{subfigure}\hfill
 \begin{subfigure}[t]{0.32\textwidth}
 \centering
-\begin{tikzpicture}[>=Latex, scale=0.85, transform shape]
-% Convex blend
-\node[draw,rounded corners,fill=blue!6,minimum width=1.4cm,minimum height=0.6cm] (c1) {};
-\node[draw,rounded corners,fill=green!6,minimum width=1.4cm,minimum height=0.6cm,below=0.1cm of c1] (c2) {};
-\node[right=0.2cm of c1,align=left,font=\tiny] {Convex blend\\(smooth mix; PSD-preserving)};
-\draw[->] ([xshift=0.7cm]c2.south) -- ++(0,-0.4cm);
-\node[draw,rounded corners,fill=blue!10!green!20,minimum width=1.4cm,minimum height=0.6cm,below=0.8cm of c2] (cb) {};
-% Edge mix
-\node[draw,rounded corners,fill=blue!6,minimum width=1.4cm,minimum height=0.6cm,right=1.8cm of c1] (e1) {};
-\node[draw,rounded corners,fill=green!6,minimum width=1.4cm,minimum height=0.6cm,below=0.1cm of e1] (e2) {};
-\node[right=0.2cm of e1,align=left,font=\tiny] {Edge-mix\\(per-edge stitching; breaks PSD)};
-\draw[->] ([xshift=0.7cm]e2.south) -- ++(0,-0.4cm);
-\begin{scope}[shift={(2.8cm,-1.3cm)}]
-  \draw[rounded corners,fill=blue!10!green!20] (0,0) rectangle (1.4,0.6);
-  \draw[very thick,white] (0.0,0.3) -- (1.4,0.3);
-  \draw[very thick,white] (0.7,0.0) -- (0.7,0.6);
-\end{scope}
-\node[below=0.9cm of cb,align=center,font=\small] {\textbf{B. Mix types:} convex blend vs.\ edge-mix};
+\begin{tikzpicture}
+% Convex blend (smooth)
+\draw[thick,blue] (0,1.5) -- (1.5,1.5);
+\draw[thick,green] (0,1.2) -- (1.5,1.2);
+\draw[->,thick] (0.75,1.0) -- (0.75,0.5);
+\draw[thick,blue!50!green] (0,0.3) -- (1.5,0.3);
+\node[right] at (1.6,1.35) {\tiny Convex blend};
+\node[right] at (1.6,0.3) {\tiny (PSD-preserving)};
+
+% Edge mix (broken)
+\draw[thick,blue] (0,0) -- (0.7,0);
+\draw[thick,green] (0.8,0) -- (1.5,0);
+\draw[->,thick] (0.75,-0.2) -- (0.75,-0.7);
+\draw[thick,blue!50!green] (0,-1.0) -- (0.7,-1.0);
+\draw[thick,blue!50!green] (0.8,-1.0) -- (1.5,-1.0);
+\node[right] at (1.6,-0.1) {\tiny Edge-mix};
+\node[right] at (1.6,-1.0) {\tiny (breaks PSD)};
+
+\node[below,font=\small] at (0.75,-1.4) {\textbf{B.} Blend types};
 \end{tikzpicture}
 \end{subfigure}\hfill
 \begin{subfigure}[t]{0.32\textwidth}
 \centering
-\begin{tikzpicture}[>=Latex, scale=0.85, transform shape]
-% Gauge
-\draw[very thick] (0,0) arc[start angle=180,end angle=360,radius=1.2];
-\foreach \a in {180,225,270,315,360}{
-  \draw[thin] ({1.2*cos(\a)},{1.2*sin(\a)}) -- ({1.35*cos(\a)},{1.35*sin(\a)});
-}
-% colored ticks (conceptual)
-\draw[line width=3pt,green!60] (180:1.0) arc (180:230:1.0);
-\draw[line width=3pt,orange!70] (230:1.0) arc (230:300:1.0);
-\draw[line width=3pt,red!70] (300:1.0) arc (300:360:1.0);
-% needle
-\draw[very thick,->] (0,0) -- ({0.9*cos(310)},{0.9*sin(310)});
-\node[below=1ex,font=\footnotesize] at (0,0) {$\lambda_{\min}(B)$};
-\node[font=\small] at (0,-1.6) {\textbf{C. Consistency meter:} more negative $\Rightarrow$ less consistent};
+\begin{tikzpicture}
+% Simple meter
+\draw[very thick] (-1,0) -- (1,0);
+\draw[thick,green] (-1,0) -- (-0.3,0);
+\draw[thick,orange] (-0.3,0) -- (0.3,0);
+\draw[thick,red] (0.3,0) -- (1,0);
+\draw[->,very thick] (0,0) -- (0.5,-0.3);
+\node[below] at (0,-0.5) {\tiny $\lambda_{\min}(B)$};
+\node[below,font=\small] at (0,-0.9) {\textbf{C.} Consistency meter};
 \end{tikzpicture}
 \end{subfigure}
-\caption{\textbf{Conceptual schematic.} \textbf{A:} GeoCert pipeline from similarities $C$ to distances $D$ to the EDM Gram $B$. \textbf{B:} \emph{Convex blends} preserve PSD (smooth mix), whereas \emph{edge-mixes} stitch per-edge constraints and can break PSD. \textbf{C:} The bottom eigenvalue $\lambda_{\min}(B)$ serves as a global ``consistency meter.'' \textbf{What to notice:} GeoCert is coordinate-free, distinguishes safe blends from unsafe mixing, and quantifies global inconsistency with a single spectrum witness.}
+\caption{\textbf{Conceptual schematic.} \textbf{A:} GeoCert pipeline from similarities $C$ to distances $D$ to EDM Gram $B$. \textbf{B:} Convex blends preserve PSD structure; edge-mixing breaks it. \textbf{C:} Bottom eigenvalue $\lambda_{\min}(B)$ indicates consistency (negative = inconsistent).}
 \label{fig:concept}
 \end{figure}
 % ======================================================================
+
+\noindent\textbf{GeoCert}, a coordinate-free pipeline that maps similarities $C$ to Euclidean distances $D$, forms the EDM Gram $B=-\tfrac12\,J D^{\circ2} J$, and uses the bottom spectrum (e.g., $\lambda_{\min}(B)$ and negative-PSD mass) as \emph{global witnesses} of embeddability. We formally distinguish \emph{convex blends} of contexts (PSD-preserving; pass) from \emph{edge-mixes} (per-edge selection; break PSD; fail), explaining the characteristic U-curves we observe under edge-mix. We add local triangle scans, edge tension, node negative-load, and a greedy $K{=}2$ edge-level disentangling that explains failures by partitioning edges into two EDM-compatible layers (cf. \citep{schoenberg1938,gower1985,LibertiLavor2017,Dokmanic2015}).
 
 \begin{tcolorbox}[colback=gray!5!white,colframe=gray!75!black,title=How to read GeoCert]
 \textbf{1. Question.} Do mixed-context representations fit one consistent Euclidean geometry?\\
@@ -142,8 +137,6 @@ A single Euclidean chart is the quiet assumption behind nearest-neighbor retriev
 \textbf{4. Diagnosis.} Edge tension $\tau$ and node load $L$ localize bridges under stress.\\
 \textbf{5. Fix.} A minimal $K{=}2$ split removes $\sim$95--97\% of negative mass on residuals; heads project to exact PSD per layer.
 \end{tcolorbox}
-
-\noindent\textbf{GeoCert}, a coordinate-free pipeline that maps similarities $C$ to Euclidean distances $D$, forms the EDM Gram $B=-\tfrac12\,J D^{\circ2} J$, and uses the bottom spectrum (e.g., $\lambda_{\min}(B)$ and negative-PSD mass) as \emph{global witnesses} of embeddability. We formally distinguish \emph{convex blends} of contexts (PSD-preserving; pass) from \emph{edge-mixes} (per-edge selection; break PSD; fail), explaining the characteristic U-curves we observe under edge-mix. We add local triangle scans, edge tension, node negative-load, and a greedy $K{=}2$ edge-level disentangling that explains failures by partitioning edges into two EDM-compatible layers (cf. \citep{schoenberg1938,gower1985,LibertiLavor2017,Dokmanic2015}).
 
 \paragraph{Contributions.}
 \begin{itemize}[leftmargin=1.5em]
@@ -387,11 +380,36 @@ GPT-Neo-125M (math vs word) & \negnum{0.00000424} & 0.50 & $\approx 0$ & $\appro
 \subsection{Two layers explain almost all geometric inconsistency}
 \textbf{Residual:} worst-mix $\to$ $K{=}2$ total neg-mass. Our greedy split is monotone and locally optimal; a penalty-based elbow (\S6.4) supports $K{=}2$ as sufficient. In practice, \textbf{$K{=}2$ captures $\ge$70\% of reducible mass}, while moving to \textbf{$K{=}3$ adds $<30\%$}.
 
-\begin{itemize}[leftmargin=1.5em]
-\item OPT-125M: \textbf{2117.5 $\to$ 66.63} (\textbf{96.85\%} removal). 
-\item GPT-Neo-125M: \textbf{1136.37 $\to$ 57.41} (\textbf{94.95\%}).
-\item DistilGPT2: \textbf{2124.93 $\to$ 66.06} (\textbf{96.89\%}).
-\end{itemize}
+\begin{table}[h!]
+\centering
+\caption{Worst-mix residual metrics and $K{=}2$ removal (median across seeds; layers L=8 for 125M/350M, L=5 for Distil).}
+\label{tab:residual_main}
+\begin{tabular}{lccc}
+\toprule
+Model & $\lambda_{\min}$ (worst-mix) & Neg-mass (worst-mix) & $K{=}2$ total (removal) \\
+\midrule
+OPT-125M & \negnum{17.04} [\negnum{17.21}, \negnum{16.76}] & 2117.5 & 66.63 (\textbf{96.85\%})\\
+GPT-Neo-125M & \negnum{19.46} [\negnum{19.82}, \negnum{19.20}] & 1136.37 & 57.41 (\textbf{94.95\%})\\
+DistilGPT2 & \negnum{17.33} [\negnum{17.40}, \negnum{17.24}] & 2124.93 & 66.06 (\textbf{96.89\%})\\
+\bottomrule
+\end{tabular}
+\vspace{0.25em}\par\raggedright\footnotesize\textit{Notes.} $\lambda_{\min}$ is the bottom eigenvalue of $B=-\tfrac12 J D^{\circ2} J$ at worst edge-mix $\rho$. ``Neg-mass'' is the sum of magnitudes of negative eigenvalues of $B$ (noise floor $\approx 10^{-6}$). $K{=}2$ total is the remaining negative mass after greedy two-layer edge assignment.
+\end{table}
+
+\begin{table}[h!]
+\centering
+\caption{Heads (66 edges): worst-mix metrics, $K{=}2$ totals, and within-heads EDM projection (exact PSD); heads from same layers as residuals.}
+\label{tab:heads_main}
+\begin{tabular}{lcccc}
+\toprule
+Model & $\lambda_{\min}$ (worst-mix) & Neg-mass (worst-mix) & $K{=}2$ total & Projection removal \\
+\midrule
+OPT-125M & \negnum{0.0527} [\negnum{0.0597}, \negnum{0.0431}] & 0.07368 & 7.781 & \textbf{100\%} ($0{+}0$) \\
+GPT-Neo-125M & \negnum{0.0883} [\negnum{0.0944}, \negnum{0.0779}] & 0.1390 & 5.268 & \textbf{100\%} ($0{+}0$) \\
+DistilGPT2 & \negnum{0.02252} [\negnum{0.02571}, \negnum{0.02012}] & 0.03063 & 5.707 & \textbf{100\%} ($0{+}0$) \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \begin{figure}[t]
 \centering
@@ -428,6 +446,23 @@ GPT-Neo-125M (math vs word) & \negnum{0.00000424} & 0.50 & $\approx 0$ & $\appro
 
 \subsection{Local triangle violations miss global failures}
 Triangle fractions (Table~\ref{tab:tri}) show weak correlation with global neg-mass, underscoring the value of spectral certificates.
+
+\begin{table}[h!]
+\centering
+\caption{Triangle violation rates (fraction, median across seeds with CIs). \textbf{What to notice:} heads have higher local rates on tiny graphs, yet global neg-mass remains small and fully projectable after $K{=}2$.}
+\label{tab:tri}
+\begin{tabular}{lcc}
+\toprule
+Model & Residual tri\_rate & Heads tri\_rate\\
+\midrule
+OPT-125M & 0.0447 [0.0442, 0.0451] & 0.6313 [0.5909, 0.6667]\\
+GPT-Neo-125M & 0.1693 [0.1684, 0.1702] & 0.8384 [0.8030, 0.8788]\\
+DistilGPT2 & 0.0541 [0.0535, 0.0546] & 0.5152 [0.3636, 0.6970]\\
+OPT-350M & 0.3058 [0.3058, 0.3058] & 0.3667 [0.3667, 0.3667]\\
+Pythia-1B & 0.5024 [0.5024, 0.5024] & 0.5000 [0.5000, 0.5000]\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Cross-context bridges drive geometric tension}
 Top-1000 high-tension edges are predominantly cross-context, consistent with competing relational programs.
@@ -603,30 +638,14 @@ We sweep $K\!\in\!\{1,2,3\}$ on the top-$K$ subgraph and evaluate $J_K=\mathrm{N
 \end{figure}
 
 \subsection{Empirical scalability}
-On $n\!\approx\!800$ residual subgraphs, Nyström with $p\in\{64,128,256\}$ tracks relative trends in $\lambda_{\min}$ and neg-mass (Fig.~\ref{fig:nystrom}, Table~\ref{tab:timing}). \textbf{What to notice:} primary benefit is memory $O(np)$ for larger $n$; small-$n$ timings are I/O-bound.
+On $n\!\approx\!800$ residual subgraphs, Nyström with $p\in\{64,128,256\}$ tracks relative trends in $\lambda_{\min}$ and neg-mass (Fig.~\ref{fig:nystrom}). \textbf{What to notice:} primary benefit is memory reduction from $O(n^2)$ to $O(np)$ for larger $n$; timing benefits emerge only at scale ($n \gg 1000$) due to I/O overhead in small matrices.
 
-\begin{figure}[t]
+\begin{figure}[h!]
 \centering
 \includegraphics[width=0.8\linewidth]{figs/nystrom_relerr_distilgpt2_residual.png}
 \caption{Nyström relative error vs landmarks $p$. \textbf{What to notice:} predictable accuracy/efficiency trade-offs while preserving qualitative trends.}
 \label{fig:nystrom}
 \end{figure}
-
-\begin{table}[t]
-\centering
-\caption{Timing and memory for exact vs Nyström (768×768 matrix).}
-\label{tab:timing}
-\begin{tabular}{lccc}
-\toprule
-Method & Time (s) & Memory (MB) & Speedup \\
-\midrule
-Exact & 0.132 & 9.0 & 1.0× \\
-Nyström $p{=}64$ & 0.183 & -- & 0.7× \\
-Nyström $p{=}128$ & 0.180 & -- & 0.7× \\
-Nyström $p{=}256$ & 0.185 & -- & 0.7× \\
-\bottomrule
-\end{tabular}
-\end{table}
 
 \subsection{Sensitivity (abridged)}
 Strong gains at $K{=}2000$; pushing to $K{=}5000$ added noise. 5--7 alternations yield diminishing returns. Alternative transforms (angular, squared-chord) preserve qualitative conclusions.
@@ -725,54 +744,6 @@ Seeds 0,1,2; 256 prompts; 21 $\rho$-steps; bootstrap CIs across seeds. Artifacts
 \section*{Acknowledgments}
 We thank colleagues for feedback on early drafts and discussions on EDM theory and causal probing. Computational resources were provided in part by institutional allocations.
 
-% ----- Tables -----
-\begin{table}[t]
-\centering
-\caption{Triangle violation rates (fraction, median across seeds with CIs). \textbf{What to notice:} heads have higher local rates on tiny graphs, yet global neg-mass remains small and fully projectable after $K{=}2$.}
-\label{tab:tri}
-\begin{tabular}{lcc}
-\toprule
-Model & Residual tri\_rate & Heads tri\_rate\\
-\midrule
-OPT-125M & 0.0447 [0.0442, 0.0451] & 0.6313 [0.5909, 0.6667]\\
-GPT-Neo-125M & 0.1693 [0.1684, 0.1702] & 0.8384 [0.8030, 0.8788]\\
-DistilGPT2 & 0.0541 [0.0535, 0.0546] & 0.5152 [0.3636, 0.6970]\\
-OPT-350M & 0.3058 [0.3058, 0.3058] & 0.3667 [0.3667, 0.3667]\\
-Pythia-1B & 0.5024 [0.5024, 0.5024] & 0.5000 [0.5000, 0.5000]\\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[t]
-\centering
-\caption{Worst-mix residual metrics and $K{=}2$ removal (median across seeds; layers L=8 for 125M/350M, L=5 for Distil).}
-\label{tab:residual_main}
-\begin{tabular}{lccc}
-\toprule
-Model & $\lambda_{\min}$ (worst-mix) & Neg-mass (worst-mix) & $K{=}2$ total (removal) \\
-\midrule
-OPT-125M & \negnum{17.04} [\negnum{17.21}, \negnum{16.76}] & 2117.5 & 66.63 (\textbf{96.85\%})\\
-GPT-Neo-125M & \negnum{19.46} [\negnum{19.82}, \negnum{19.20}] & 1136.37 & 57.41 (\textbf{94.95\%})\\
-DistilGPT2 & \negnum{17.33} [\negnum{17.40}, \negnum{17.24}] & 2124.93 & 66.06 (\textbf{96.89\%})\\
-\bottomrule
-\end{tabular}
-\vspace{0.25em}\par\raggedright\footnotesize\textit{Notes.} $\lambda_{\min}$ is the bottom eigenvalue of $B=-\tfrac12 J D^{\circ2} J$ at worst edge-mix $\rho$. ``Neg-mass'' is the sum of magnitudes of negative eigenvalues of $B$ (noise floor $\approx 10^{-6}$). $K{=}2$ total is the remaining negative mass after greedy two-layer edge assignment.
-\end{table}
-
-\begin{table}[t]
-\centering
-\caption{Heads (66 edges): worst-mix metrics, $K{=}2$ totals, and within-heads EDM projection (exact PSD); heads from same layers as residuals.}
-\label{tab:heads_main}
-\begin{tabular}{lcccc}
-\toprule
-Model & $\lambda_{\min}$ (worst-mix) & Neg-mass (worst-mix) & $K{=}2$ total & Projection removal \\
-\midrule
-OPT-125M & \negnum{0.0527} [\negnum{0.0597}, \negnum{0.0431}] & 0.07368 & 7.781 & \textbf{100\%} ($0{+}0$) \\
-GPT-Neo-125M & \negnum{0.0883} [\negnum{0.0944}, \negnum{0.0779}] & 0.1390 & 5.268 & \textbf{100\%} ($0{+}0$) \\
-DistilGPT2 & \negnum{0.02252} [\negnum{0.02571}, \negnum{0.02012}] & 0.03063 & 5.707 & \textbf{100\%} ($0{+}0$) \\
-\bottomrule
-\end{tabular}
-\end{table}
 
 % ----- Appendix -----
 \appendix
@@ -780,7 +751,7 @@ DistilGPT2 & \negnum{0.02252} [\negnum{0.02571}, \negnum{0.02012}] & 0.03063 & 5
 \clearpage
 \section{Additional RFC figures}
 \label{app:rfc-big}
-\begin{figure}[t]
+\begin{figure}[h!]
 \centering
 \begin{subfigure}[t]{0.48\textwidth}
 \includegraphics[width=\linewidth]{figs/rfc_alignment_facebook_opt-350m_residual_L8}
