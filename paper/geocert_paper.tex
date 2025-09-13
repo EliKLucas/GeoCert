@@ -44,6 +44,10 @@
 % Ensure consistent negative-number rendering in text/tables
 \newcommand{\negnum}[1]{\ensuremath{-#1}}
 
+% ----- Internal toggles -----
+\newif\ifshowanchors
+\showanchorsfalse
+
 % ----- Title -----
 \title{GeoCert: Coordinate-Free Geometric Consistency Tests\\
 for LLM Representations}
@@ -794,15 +798,19 @@ $\tau_{ij}=(\hat u_i-\hat u_j)^2$, with $\hat u=Ju$. Negative-load $L_i=(B_-)_{i
 \subsection*{RFC protocol (corrupt/rescue)}\label{app:rfc-protocol}
 We follow a standard corrupt/rescue protocol. For a layer $\ell$ with node activations $h^{(\ell)}$, \emph{corrupt-all} replaces $h^{(\ell)}$ with a mismatched batch (or adds calibrated Gaussian noise) with strength $\alpha$; \emph{rescue-$i$} repeats corrupt-all but restores node $i$. Impact is $\Delta\mathcal{L}_i=\mathcal{L}(\text{corrupt-all})-\mathcal{L}(\text{rescue-}i)$. We calibrate $\alpha$ for a $\sim$10--30\% loss increase to avoid saturation. We report Pearson/Spearman and precision@K vs random and degree-matched baselines; we also compute Kendall's $\tau_b$ when ties make Spearman unstable \citep{Kendall1938,Spearman1904}.
 
+\ifshowanchors
 \section{Figure anchors}\label{app:figs}
-\textbf{Curves:} \texttt{figs/curve\_facebook\_opt-125m\_residual.png}, \texttt{figs/curve\_facebook\_opt-125m\_heads.png};\\
-\texttt{figs/curve\_EleutherAI\_gpt-neo-125M\_residual.png}, \texttt{figs/curve\_EleutherAI\_gpt-neo-125M\_heads.png};\\
-\texttt{figs/curve\_distilgpt2\_residual.png}, \texttt{figs/curve\_distilgpt2\_heads.png}.\\[0.25em]
-\textbf{Edge attribution:} \texttt{figs/edge\_attr\_*}, \texttt{figs/edge\_attr\_props\_*}.\\[0.25em]
-\textbf{Mass panels:} \texttt{figs/mass\_removal\_facebook\_opt-125m\_residual.png}, \texttt{figs/mass\_removal\_facebook\_opt-125m\_heads.png}; \texttt{figs/mass\_panel\_EleutherAI\_gpt-neo-125M\_residual.png}, \texttt{figs/mass\_panel\_EleutherAI\_gpt-neo-125M\_heads.png}; \texttt{figs/mass\_panel\_distilgpt2\_heads.png}.\\[0.25em]
-\textbf{Spectra overlays:} \texttt{figs/spectrum\_overlay\_*}.\\[0.25em]
-\textbf{Controls (seed0):} \texttt{figs/control\_convex\_vs\_edge\_mix\_facebook\_opt-125m\_residual\_seed0.png}, \texttt{...gpt-neo-125M...}, \texttt{...distilgpt2...}.\\
-(Seeds 0--2 available analogously.)
+\begin{itemize}[leftmargin=1.25em]
+\item \textbf{Curves:} \path{figs/curve_facebook_opt-125m_residual.png}, \path{figs/curve_facebook_opt-125m_heads.png};\\
+\path{figs/curve_EleutherAI_gpt-neo-125M_residual.png}, \path{figs/curve_EleutherAI_gpt-neo-125M_heads.png};\\
+\path{figs/curve_distilgpt2_residual.png}, \path{figs/curve_distilgpt2_heads.png}.
+\item \textbf{Edge attribution:} \path{figs/edge_attr_*}, \path{figs/edge_attr_props_*}.
+\item \textbf{Mass panels:} \path{figs/mass_removal_facebook_opt-125m_residual.png}, \path{figs/mass_removal_facebook_opt-125m_heads.png}; \path{figs/mass_panel_EleutherAI_gpt-neo-125M_residual.png}, \path{figs/mass_panel_EleutherAI_gpt-neo-125M_heads.png}; \path{figs/mass_panel_distilgpt2_heads.png}.
+\item \textbf{Spectra overlays:} \path{figs/spectrum_overlay_*}.
+\item \textbf{Controls (seed0):} \path{figs/control_convex_vs_edge_mix_facebook_opt-125m_residual_seed0.png}, \texttt{...gpt-neo-125M...}, \texttt{...distilgpt2...}.\\
+\textit{(Seeds 0--2 available analogously.)}
+\end{itemize}
+\fi
 
 \section{References}
 \vspace{-0.25em}
